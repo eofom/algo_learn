@@ -32,7 +32,10 @@ def plot_prices(prices):
 
 
 def show_strategy(prices, buy_day, sell_day):
-    assert 0 <= buy_day <= sell_day < len(prices)
+    valid_strategy = 0 <= buy_day <= sell_day < len(prices)
+    if not valid_strategy:
+        print("Invalid strategy! Check again that 0 <= buy_day <= sell_day < len(prices)")
+        return
     plot_strategy(prices, buy_day, sell_day)
     plot_prices(prices)
 
@@ -57,8 +60,9 @@ def find_best_strategy_(prices):
         profit = prices[day] - buy_day_price
         if profit > max_profit:
             max_sell_day = day
+            max_buy_day = buy_day
             max_profit = profit
-
+    assert prices[max_sell_day] - prices[max_buy_day] == max_profit
     return max_profit, max_buy_day, max_sell_day
 
 
@@ -80,9 +84,32 @@ def check_task_1(buy_day, sell_day):
     stock_prices = [7, 1, 5, 3, 6, 4]
     check_strategy(stock_prices, buy_day, sell_day)
 
-# def check_task_1_5(fun):
-#     for _ in range(10):
-#         prices = generate_random_prices_(10, 3)
+
+def check_solution(fun, prices):
+    user_max_profit, user_best_buy_day, user_best_sell_day = fun(prices)
+    max_profit, best_buy_day, best_sell_day = find_best_strategy_(prices)
+    if user_max_profit != max_profit:
+        print("for prices ==", prices)
+        print("max_profit ==", max_profit, "best_buy_day ==",
+              best_buy_day, "best_sell_day ==", best_sell_day)
+        show_strategy(prices, best_buy_day, best_sell_day)
+        print("but your solution is")
+        print("max_profit ==", user_max_profit, "best_buy_day ==",
+              user_best_buy_day, "best_sell_day ==", user_best_sell_day)
+        show_strategy(prices, user_best_buy_day, user_best_sell_day)
+        return False
+    return True
+
+
+def check_task_1_5(fun):
+    random.seed(1)
+    for _ in range(10):
+        prices = generate_random_prices_(10, 3)
+        if not check_solution(fun, prices):
+            return False
+    print("Correct!")
+    return True
+
 
 def check_task_2(strategies):
     correct_solution = {
@@ -177,21 +204,11 @@ def check_task_5(fun):
 
 
 def check_task_6(fun):
-    random.seed(346534)
+    random.seed(1)
     max_len = 200
     for prices_len in range(3, max_len):
         prices = generate_random_prices_(20, prices_len)
-        user_max_profit, user_best_buy_day, user_best_sell_day = fun(prices)
-        max_profit, best_buy_day, best_sell_day = find_best_strategy_(prices)
-        if user_max_profit != max_profit:
-            print("for prices ==", prices)
-            print("max_profit ==", max_profit, "best_buy_day ==",
-                  best_buy_day, "best_sell_day ==", best_sell_day)
-            show_strategy(prices, best_buy_day, best_sell_day)
-            print("but your solution is")
-            print("max_profit ==", user_max_profit, "best_buy_day ==",
-                  user_best_buy_day, "best_sell_day ==", user_best_sell_day)
-            show_strategy(prices, user_best_buy_day, user_best_sell_day)
+        if not check_solution(fun, prices):
             return False
         if prices_len % 10 == 0:
             print(str(prices_len * 100 / max_len) + "% checked!")
