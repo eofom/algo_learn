@@ -7,6 +7,7 @@ def generate_random_prices_(max_price=10, length=6):
     prices = [randint(1, max_price) for _ in range(length)]
     return prices
 
+
 def plot_strategy(prices, buy_day, sell_day):
     buy_price = prices[buy_day]
     sell_price = prices[sell_day]
