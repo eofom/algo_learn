@@ -21,8 +21,8 @@ def plot_strategy(prices, buy_day, sell_day):
     plt.plot([buy_day, sell_day], [sell_price, sell_price])
     ax.arrow(buy_day, prices[buy_day], 0, arrow_length, head_width=arrow_head_width, head_length=arrow_head_length, fc='k', ec='k')
 
-    plt.annotate("buy for " + str(buy_day), [buy_day + 0.1, buy_price - 0.35])
-    plt.annotate("sell for " + str(sell_day), [sell_day + 0.1, sell_price + 0.35])
+    plt.annotate("buy for " + str(buy_price), [buy_day + 0.1, buy_price - 0.35])
+    plt.annotate("sell for " + str(sell_price), [sell_day + 0.1, sell_price + 0.35])
     plt.annotate("profit=" + str(profit), [buy_day + 0.1, (buy_price + sell_price) / 2])
 
 
